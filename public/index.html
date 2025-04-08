@@ -3,374 +3,531 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music System UI</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Music System - Login & Signup</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="./js/script.js" defer></script>
+    <script>
+        function showForm(form) {
+            document.getElementById('loginForm').style.display = form === 'login' ? 'block' : 'none';
+            document.getElementById('signupForm').style.display = form === 'signup' ? 'block' : 'none';
+            document.getElementById('forgotPasswordForm').style.display = form === 'forgot' ? 'block' : 'none';
+            document.getElementById('resetPasswordForm').style.display = form === 'reset' ? 'block' : 'none';
+            document.getElementById('otpForm').style.display = form === 'otp' ? 'block' : 'none';
+        }
+
+        function showOTPForm(email) {
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('otpForm').style.display = 'block';
+            document.getElementById('otpEmail').value = email;
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            // Validate inputs
+            if (!name || !email || !password) {
+                alert('All fields are required');
+                return;
+            }
+
+            const submitButton = document.getElementById('signupButton');
+            const loader = document.getElementById('signupLoader');
+            submitButton.disabled = true;
+            loader.style.display = 'inline-block';
+
+            try {
+                const response = await fetch('/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('OTP has been sent to your email');
+                    showOTPForm(email);
+                } else {
+                    alert(data.error || 'Error during signup');
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                alert('Error connecting to server. Please try again later.');
+            } finally {
+                submitButton.disabled = false;
+                loader.style.display = 'none';
+            }
+        }
+
+        async function handleForgotPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+
+            if (!email) {
+                alert('Email is required');
+                return;
+            }
+
+            const submitButton = document.getElementById('forgotPasswordButton');
+            const loader = document.getElementById('forgotPasswordLoader');
+            submitButton.disabled = true;
+            loader.style.display = 'inline-block';
+
+            try {
+                const response = await fetch('/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Password reset token has been sent to your email');
+                    showResetForm(email);
+                } else {
+                    alert(data.error || 'Error sending reset token');
+                }
+            } catch (error) {
+                console.error('Forgot password error:', error);
+                alert('Error connecting to server. Please try again later.');
+            } finally {
+                submitButton.disabled = false;
+                loader.style.display = 'none';
+            }
+        }
+
+        function showResetForm(email) {
+            document.getElementById('forgotPasswordForm').style.display = 'none';
+            document.getElementById('resetPasswordForm').style.display = 'block';
+            document.getElementById('resetEmail').value = email;
+        }
+    </script>
+    <style>
+        body{
+            margin: 0px;
+            padding: 0px;
+          }
+          .container {
+            height: 100vh;
+            /* flex-direction: row; */
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            /* background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e); */
+            background-color: grey;
+          }
+          .small-container{
+            height: 68vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          
+          .form_main {
+            height: 64vh;
+            width: 350px;
+            /* background-color: pink; */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(255, 255, 255);
+            /* border-radius: 30px; */
+            box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
+            margin-bottom: 4px;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+          }
+          .side-img img{
+            height: 64vh;
+            /* background-image: url(login\ 0.1.png); */
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+          }
+          
+          .heading {
+            font-size: 2.5em;
+            color: #2e2e2e;
+            font-weight: 700;
+            margin: 15px 0 30px 0;
+          }
+          
+          .inputContainer {
+            height: 9vh;
+            width: 288px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          
+          .inputIcon {
+            position: absolute;
+            left: 10px;
+          }
+          
+          .inputField {
+            width: 100%;
+            height: 40px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid rgb(173, 173, 173);
+            border-radius: 30px;
+            margin: 10px 0;
+            color: black;
+            font-size: .8em;
+            font-weight: 500;
+            box-sizing: border-box;
+            padding-left: 30px;
+          }
+          
+          .inputField:focus {
+            outline: none;
+            border-bottom: 2px solid rgb(199, 114, 255);
+          }
+          
+          .inputField::placeholder {
+            color: rgb(80, 80, 80);
+            font-size: 1em;
+            font-weight: 500;
+          }
+          
+          #button {
+            position: relative;
+            width: 62%;
+            border: 2px solid #8000ff;
+            background-color: #8000ff;
+            height: 40px;
+            color: white;
+            font-size: .8em;
+            font-weight: 500;
+            letter-spacing: 1px;
+            border-radius: 30px;
+            margin: 10px;
+            cursor: pointer;
+            overflow: hidden;
+          }
+          
+          #button::after {
+            content: "";
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.253);
+            height: 100%;
+            width: 150px;
+            top: 0;
+            left: -200px;
+            border-bottom-right-radius: 100px;
+            border-top-left-radius: 100px;
+            filter: blur(10px);
+            transition-duration: .5s;
+          }
+          
+          #button:hover::after {
+            transform: translateX(600px);
+            transition-duration: .5s;
+          }
+          
+          .signupContainer {
+            margin: 0;
+            display: flex;
+            /* flex-direction: column; */
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+          }
+          
+          .signupContainer p {
+            font-size: .9em;
+            font-weight: 500;
+            color: black;
+          }
+          
+          .signupContainer a {
+            font-size: .7em;
+            font-weight: 500;
+            background-color: #2e2e2e;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+          }
+          
+          .sub_title {
+            font-weight: 600;
+            margin: 5px 0;
+          }
+          #signupButton{
+            position: relative;
+              width: 62%;
+              border: 2px solid #8000ff;
+              background-color: #8000ff;
+              height: 40px;
+              color: white;
+              font-size: .8em;
+              font-weight: 500;
+              letter-spacing: 1px;
+              border-radius: 30px;
+              margin: 10px;
+              cursor: pointer;
+              overflow: hidden;
+          
+          }
+          #otpButton{
+            position: relative;
+            width: 62%;
+            border: 2px solid #8000ff;
+            background-color: #8000ff;
+            height: 40px;
+            color: white;
+            font-size: .8em;
+            font-weight: 500;
+            letter-spacing: 1px;
+            border-radius: 30px;
+            margin: 10px;
+            cursor: pointer;
+            overflow: hidden;
+          }
+          #forgotPasswordButton{
+            position: relative;
+          width: 62%;
+          border: 2px solid #8000ff;
+          background-color: #8000ff;
+          height: 40px;
+          color: white;
+          font-size: .8em;
+          font-weight: 500;
+          letter-spacing: 1px;
+          border-radius: 30px;
+          margin: 10px;
+          cursor: pointer;
+          overflow: hidden;
+          }
+          #resetPasswordButton{
+            position: relative;
+            width: 62%;
+            border: 2px solid #8000ff;
+            background-color: #8000ff;
+            height: 40px;
+            color: white;
+            font-size: .8em;
+            font-weight: 500;
+            letter-spacing: 1px;
+            border-radius: 30px;
+            margin: 10px;
+            cursor: pointer;
+            overflow: hidden;
+          }
+          .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 20px;
+            height: 20px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+            display: none;
+            margin-left: 10px;
+          }
+          @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+          }
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+    </style>
 </head>
-<body>
-    <div class="music-player">
-        <!-- Mobile navigation toggle -->
-        <button class="mobile-nav-toggle" id="mobile-nav-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
+<body onload="showForm('login')">
+    <div class="container">
+        <div class="music-background">
+            <div class="music-note note-1"><i class="fas fa-music"></i></div>
+            <div class="music-note note-2"><i class="fas fa-music"></i></div>
+            <div class="music-note note-3"><i class="fas fa-music"></i></div>
+            <div class="music-note note-4"><i class="fas fa-music"></i></div>
+            <div class="music-note note-5"><i class="fas fa-music"></i></div>
+        </div>
         
-        <!-- Main content area -->
-        <div class="main-content">
-            <!-- Left panel - Album art and track info -->
-            <div class="left-panel">
-                <div class="album-art-container">
-                    <div class="album-art-glow"></div>
-                    <div class="album-art">
-                        <img src="https://via.placeholder.com/400" alt="Cosmic Waves by Astral Horizon" id="cover-art">
-                    </div>
-                </div>
-
-                <div class="track-info">
-                    <h2 id="track-title">Cosmic Waves</h2>
-                    <p id="track-artist">Astral Horizon</p>
-                    <p id="track-album">Interstellar Dreams</p>
-                </div>
-
-                <div class="track-actions">
-                    <button class="action-btn" id="like-btn">
-                        <i class="fa-solid fa-heart"></i>
-                    </button>
-                    <button class="action-btn">
-                        <i class="fa-solid fa-microphone"></i>
-                    </button>
-                    <button class="action-btn">
-                        <i class="fa-solid fa-star"></i>
-                    </button>
-                </div>
+        <div class="form-container">
+            <div class="logo">
+                <i class="fas fa-headphones-alt"></i>
+                <h1>MusicHub</h1>
             </div>
-
-            <!-- Right panel - Dynamic content based on active view -->
-            <div class="right-panel">
-                <!-- Search bar -->
-                <div class="search-container">
-                    <i class="fa-solid fa-search"></i>
-                    <input type="text" placeholder="Search in your library" id="search-input">
-                </div>
-
-                <div class="content-container">
-                    <!-- Sidebar -->
-                    <div class="sidebar" id="sidebar">
-                        <div class="sidebar-header">
-                            <h3>Your Playlists</h3>
-                            <button class="add-btn" id="add-playlist-btn">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="form-section active">
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Login to continue your musical journey</p>
+                
+                <form action="/login" method="post">
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
                         </div>
-                        <div class="playlist-buttons">
-                            <button class="playlist-btn" id="favorites-btn">
-                                <div class="playlist-icon">
-                                    <i class="fa-solid fa-music"></i>
-                                </div>
-                                <span>Favorites</span>
-                                <span class="count" id="favorites-count">0</span>
-                            </button>
-                            <button class="playlist-btn" id="recent-btn">
-                                <div class="playlist-icon">
-                                    <i class="fa-solid fa-music"></i>
-                                </div>
-                                <span>Recently Played</span>
-                                <span class="count" id="recent-count">0</span>
-                            </button>
-                            <button class="playlist-btn" id="playlists-btn">
-                                <div class="playlist-icon">
-                                    <i class="fa-solid fa-music"></i>
-                                </div>
-                                <span>Play Lists</span>
-                            </button>
-                            <button class="playlist-btn active" id="home-btn">
-                                <div class="playlist-icon">
-                                    <i class="fa-solid fa-music"></i>
-                                </div>
-                                <span>Home</span>
-                            </button>
-                        </div>
+                        <input type="email" name="email" placeholder="Email" required>
                     </div>
-
-                    <!-- Main content views -->
-                    <div class="main-views">
-                        <!-- Home View (Updated to show all tracks) -->
-                        <div class="view-content active" id="home-view">
-                            <div class="playlist-header">
-                                <h3>All Music</h3>
-                                <div class="playlist-style">
-                                    <button class="add-music-btn" id="add-music-btn">
-                                        <i class="fa-solid fa-plus"></i>
-                                        Add Music
-                                    </button>
-                                    <button class="shuffle-btn">
-                                        <i class="fa-solid fa-shuffle"></i>
-                                        Shuffle All
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <table class="playlist-table">
-                                <thead>
-                                    <tr>
-                                        <th class="col-num">#</th>
-                                        <th class="col-title">Title</th>
-                                        <th class="col-duration">
-                                            <i class="fa-solid fa-clock"></i>
-                                        </th>
-                                        <th class="col-actions"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="all-tracks">
-                                    <!-- All tracks will be added here by JavaScript -->
-                                </tbody>
-                            </table>
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
                         </div>
-
-                        <!-- Playlists View -->
-                        <div class="view-content" id="playlists-view">
-                            <h2>Your Playlists</h2>
-                            <p class="subtitle">Select a playlist to start listening</p>
-                            
-                            <div class="playlists-grid">
-                                <div class="playlist-card" data-playlist="workout">
-                                    <div class="playlist-card-bg workout-bg"></div>
-                                    <div class="playlist-card-content">
-                                        <h3>Workout Mix</h3>
-                                        <p>15 songs</p>
-                                    </div>
-                                </div>
-                                <div class="playlist-card" data-playlist="chill">
-                                    <div class="playlist-card-bg chill-bg"></div>
-                                    <div class="playlist-card-content">
-                                        <h3>Chill Vibes</h3>
-                                        <p>15 songs</p>
-                                    </div>
-                                </div>
-                                <div class="playlist-card" data-playlist="party">
-                                    <div class="playlist-card-bg party-bg"></div>
-                                    <div class="playlist-card-content">
-                                        <h3>Party Time</h3>
-                                        <p>15 songs</p>
-                                    </div>
-                                </div>
-                                <div class="playlist-card" data-playlist="focus">
-                                    <div class="playlist-card-bg focus-bg"></div>
-                                    <div class="playlist-card-content">
-                                        <h3>Focus Mode</h3>
-                                        <p>15 songs</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Playlist View -->
-                        <div class="view-content" id="playlist-view">
-                            <div class="playlist-header">
-                                <button class="back-btn" id="back-to-playlists-btn">
-                                    <i class="fa-solid fa-arrow-left"></i>
-                                    Back
-                                </button>
-                                <h3 id="current-playlist-title">Current Playlist</h3>
-                                <div>
-                                    <button class="add-to-playlist-btn" id="add-to-playlist-btn">
-                                        <i class="fa-solid fa-plus"></i>
-                                        Add Music
-                                    </button>
-                                    <button class="shuffle-btn">
-                                        <i class="fa-solid fa-shuffle"></i>
-                                        Shuffle All
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <table class="playlist-table">
-                                <thead>
-                                    <tr>
-                                        <th class="col-num">#</th>
-                                        <th class="col-title">Title</th>
-                                        <th class="col-duration">
-                                            <i class="fa-solid fa-clock"></i>
-                                        </th>
-                                        <th class="col-actions"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="playlist-tracks">
-                                    <!-- Tracks will be added here by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Favorites View -->
-                        <div class="view-content" id="favorites-view">
-                            <div class="playlist-header">
-                                <h3>Your Favorites</h3>
-                                <button class="shuffle-btn">
-                                    <i class="fa-solid fa-shuffle"></i>
-                                    Shuffle All
-                                </button>
-                            </div>
-                            
-                            <table class="playlist-table">
-                                <thead>
-                                    <tr>
-                                        <th class="col-num">#</th>
-                                        <th class="col-title">Title</th>
-                                        <th class="col-duration">
-                                            <i class="fa-solid fa-clock"></i>
-                                        </th>
-                                        <th class="col-actions"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="favorites-tracks">
-                                    <!-- Favorites will be added here by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Recent View -->
-                        <div class="view-content" id="recent-view">
-                            <div class="playlist-header">
-                                <h3>Recently Played</h3>
-                                <button class="shuffle-btn">
-                                    <i class="fa-solid fa-shuffle"></i>
-                                    Shuffle All
-                                </button>
-                            </div>
-                            
-                            <table class="playlist-table">
-                                <thead>
-                                    <tr>
-                                        <th class="col-num">#</th>
-                                        <th class="col-title">Title</th>
-                                        <th class="col-duration">
-                                            <i class="fa-solid fa-clock"></i>
-                                        </th>
-                                        <th class="col-actions"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recent-tracks">
-                                    <!-- Recent tracks will be added here by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
+                        <input type="password" name="password" placeholder="Password" required>
                     </div>
-                </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <span>Login</span>
+                        <i class="fas fa-sign-in-alt"></i>
+                    </button>
+                    
+                    <div class="form-footer">
+                        <p>Don't have an account? <a href="#" onclick="showForm('signup'); return false;">Sign up</a></p>
+                        <p><a href="#" onclick="showForm('forgot'); return false;">Forgot Password?</a></p>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Signup Form -->
+            <div id="signupForm" class="form-section">
+                <h2>Join the Beat</h2>
+                <p class="subtitle">Create your account to start streaming</p>
+                
+                <form onsubmit="handleSignup(event)">
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <input type="text" id="name" name="name" placeholder="Full Name" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <input type="email" id="signupEmail" name="email" placeholder="Email" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" id="signupPassword" name="password" placeholder="Password" required>
+                    </div>
+                    
+                    <button type="submit" id="signupButton" class="btn btn-primary">
+                        <span>Sign Up</span>
+                        <i class="fas fa-user-plus"></i>
+                    </button>
+                    <div class="loader" id="signupLoader"></div>
+                    
+                    <div class="form-footer">
+                        <p>Already have an account? <a href="#" onclick="showForm('login'); return false;">Login</a></p>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- OTP Verification Form -->
+            <div id="otpForm" class="form-section">
+                <h2>Verify Your Email</h2>
+                <p class="subtitle">Enter the OTP sent to your email</p>
+                
+                <form action="/verify-otp" method="post">
+                    <input type="hidden" id="otpEmail" name="email">
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <input type="text" id="otp" name="otp" placeholder="Enter OTP" required>
+                    </div>
+                    
+                    <button type="submit" id="otpButton" class="btn btn-primary">
+                        <span>Verify OTP</span>
+                        <i class="fas fa-check-circle"></i>
+                    </button>
+                    
+                    <div class="form-footer">
+                        <p>Didn't receive OTP? <a href="#" onclick="resendOTP(); return false;">Resend</a></p>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Forgot Password Form -->
+            <div id="forgotPasswordForm" class="form-section">
+                <h2>Reset Password</h2>
+                <p class="subtitle">We'll send you a reset link</p>
+                
+                <form onsubmit="handleForgotPassword(event)">
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <input type="email" id="forgotEmail" name="email" placeholder="Email" required>
+                    </div>
+                    
+                    <button type="submit" id="forgotPasswordButton" class="btn btn-primary">
+                        <span>Send Reset Link</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <div class="loader" id="forgotPasswordLoader"></div>
+                    
+                    <div class="form-footer">
+                        <p>Remembered your password? <a href="#" onclick="showForm('login'); return false;">Login</a></p>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Reset Password Form -->
+            <div id="resetPasswordForm" class="form-section">
+                <h2>New Password</h2>
+                <p class="subtitle">Enter the token and your new password</p>
+                
+                <form action="/reset-password" method="post">
+                    <input type="hidden" id="resetEmail" name="email">
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <input type="text" id="token" name="token" placeholder="Enter Token" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <input type="password" id="newPassword" name="newPassword" placeholder="New Password" required>
+                    </div>
+                    
+                    <button type="submit" id="resetPasswordButton" class="btn btn-primary">
+                        <span>Reset Password</span>
+                        <i class="fas fa-save"></i>
+                    </button>
+                    
+                    <div class="form-footer">
+                        <p>Remembered your password? <a href="#" onclick="showForm('login'); return false;">Login</a></p>
+                    </div>
+                </form>
             </div>
         </div>
-
-        <!-- Bottom control bar -->
-        <div class="control-bar">
-            <div class="progress-container">
-                <span id="current-time">0:00</span>
-                <div class="progress-bar-container">
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" id="progress-bar-fill"></div>
-                    </div>
-                    <input type="range" min="0" max="100" value="0" class="progress-bar" id="progress-bar">
-                </div>
-                <span id="duration">3:57</span>
-            </div>
-
-            <div class="playback-controls">
-                <div class="volume-controls">
-                    <button class="control-btn" id="mute-btn">
-                        <i class="fa-solid fa-volume-high"></i>
-                    </button>
-                    <div class="volume-slider-container">
-                        <div class="volume-slider-bg">
-                            <div class="volume-slider-fill" id="volume-slider-fill"></div>
-                        </div>
-                        <input type="range" min="0" max="100" value="80" class="volume-slider" id="volume-slider">
-                    </div>
-                </div>
-
-                <div class="main-controls">
-                    <button class="control-btn">
-                        <i class="fa-solid fa-shuffle"></i>
-                    </button>
-                    <button class="control-btn" id="prev-btn">
-                        <i class="fa-solid fa-backward-step"></i>
-                    </button>
-                    <button class="play-btn" id="play-btn">
-                        <i class="fa-solid fa-play"></i>
-                    </button>
-                    <button class="control-btn" id="next-btn">
-                        <i class="fa-solid fa-forward-step"></i>
-                    </button>
-                    <button class="control-btn">
-                        <i class="fa-solid fa-repeat"></i>
-                    </button>
-                </div>
-
-                <div class="view-controls">
-                    <button class="control-btn">
-                        <i class="fa-solid fa-music"></i>
-                    </button>
-                </div>
-            </div>
+        
+        <div class="equalizer">
+            <div class="bar bar-1"></div>
+            <div class="bar bar-2"></div>
+            <div class="bar bar-3"></div>
+            <div class="bar bar-4"></div>
+            <div class="bar bar-5"></div>
         </div>
     </div>
-
-    <!-- File upload input (hidden) -->
-    <input type="file" id="file-upload" accept="audio/*" multiple style="display: none;">
-    
-    <!-- Add to playlist modal -->
-    <div class="modal" id="add-to-playlist-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add to Playlist</h3>
-                <button class="close-modal-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="playlist-select">
-                    <div class="playlist-option" data-playlist="workout">
-                        <div class="playlist-icon">
-                            <i class="fa-solid fa-music"></i>
-                        </div>
-                        <span>Workout Mix</span>
-                    </div>
-                    <div class="playlist-option" data-playlist="chill">
-                        <div class="playlist-icon">
-                            <i class="fa-solid fa-music"></i>
-                        </div>
-                        <span>Chill Vibes</span>
-                    </div>
-                    <div class="playlist-option" data-playlist="party">
-                        <div class="playlist-icon">
-                            <i class="fa-solid fa-music"></i>
-                        </div>
-                        <span>Party Time</span>
-                    </div>
-                    <div class="playlist-option" data-playlist="focus">
-                        <div class="playlist-icon">
-                            <i class="fa-solid fa-music"></i>
-                        </div>
-                        <span>Focus Mode</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create playlist modal -->
-    <div class="modal" id="create-playlist-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Create New Playlist</h3>
-                <button class="close-modal-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="playlist-name">Playlist Name</label>
-                    <input type="text" id="playlist-name" placeholder="Enter playlist name">
-                </div>
-                <button class="create-playlist-btn">Create Playlist</button>
-            </div>
-        </div>
-    </div>
-
-    <audio id="audio-player" src="/placeholder.svg"></audio>
-    <script src="script.js"></script>
 </body>
 </html>

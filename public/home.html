@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music System UI</title>
+    <link rel="stylesheet" href="home.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="music-player">
+        <!-- Mobile navigation toggle -->
+        <button class="mobile-nav-toggle" id="mobile-nav-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- Main content area -->
+        <div class="main-content">
+            <!-- Left panel - Album art and track info -->
+            <div class="left-panel">
+                <div class="album-art-container">
+                    <div class="album-art-glow"></div>
+                    <div class="album-art">
+                        <img src="https://via.placeholder.com/400" alt="Cosmic Waves by Astral Horizon" id="cover-art">
+                    </div>
+                </div>
+
+                <div class="track-info">
+                    <h2 id="track-title">Cosmic Waves</h2>
+                    <p id="track-artist">Astral Horizon</p>
+                    <p id="track-album">Interstellar Dreams</p>
+                </div>
+
+                <div class="track-actions">
+                    <button class="action-btn" id="like-btn">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fa-solid fa-star"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right panel - Dynamic content based on active view -->
+            <div class="right-panel">
+                <!-- Search bar -->
+                <div class="search-container">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" placeholder="Search in your library" id="search-input">
+                </div>
+
+                <div class="content-container">
+                    <!-- Sidebar -->
+                    <div class="sidebar" id="sidebar">
+                        <div class="sidebar-header">
+                            <h3>Your Playlists</h3>
+                            <button class="add-btn" id="add-playlist-btn">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="playlist-buttons">
+                            <button class="playlist-btn" id="favorites-btn">
+                                <div class="playlist-icon">
+                                    <i class="fa-solid fa-music"></i>
+                                </div>
+                                <span>Favorites</span>
+                                <span class="count" id="favorites-count">0</span>
+                            </button>
+                            <button class="playlist-btn" id="recent-btn">
+                                <div class="playlist-icon">
+                                    <i class="fa-solid fa-music"></i>
+                                </div>
+                                <span>Recently Played</span>
+                                <span class="count" id="recent-count">0</span>
+                            </button>
+                            <button class="playlist-btn" id="playlists-btn">
+                                <div class="playlist-icon">
+                                    <i class="fa-solid fa-music"></i>
+                                </div>
+                                <span>Play Lists</span>
+                            </button>
+                            <button class="playlist-btn active" id="home-btn">
+                                <div class="playlist-icon">
+                                    <i class="fa-solid fa-music"></i>
+                                </div>
+                                <span>Home</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Main content views -->
+                    <div class="main-views">
+                        <!-- Home View (Updated to show all tracks) -->
+                        <div class="view-content active" id="home-view">
+                            <div class="playlist-header">
+                                <h3>All Music</h3>
+                                <div class="playlist-style">
+                                    <button class="add-music-btn" id="add-music-btn">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Add Music
+                                    </button>
+                                    <button class="shuffle-btn">
+                                        <i class="fa-solid fa-shuffle"></i>
+                                        Shuffle All
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <table class="playlist-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-num">#</th>
+                                        <th class="col-title">Title</th>
+                                        <th class="col-duration">
+                                            <i class="fa-solid fa-clock"></i>
+                                        </th>
+                                        <th class="col-actions"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="all-tracks">
+                                    <!-- All tracks will be added here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Playlists View -->
+                        <div class="view-content" id="playlists-view">
+                            <h2>Your Playlists</h2>
+                            <p class="subtitle">Select a playlist to start listening</p>
+                            
+                            <div class="playlists-grid">
+                                <div class="playlist-card" data-playlist="workout">
+                                    <div class="playlist-card-bg workout-bg"></div>
+                                    <div class="playlist-card-content">
+                                        <h3>Workout Mix</h3>
+                                        <p>15 songs</p>
+                                    </div>
+                                </div>
+                                <div class="playlist-card" data-playlist="chill">
+                                    <div class="playlist-card-bg chill-bg"></div>
+                                    <div class="playlist-card-content">
+                                        <h3>Chill Vibes</h3>
+                                        <p>15 songs</p>
+                                    </div>
+                                </div>
+                                <div class="playlist-card" data-playlist="party">
+                                    <div class="playlist-card-bg party-bg"></div>
+                                    <div class="playlist-card-content">
+                                        <h3>Party Time</h3>
+                                        <p>15 songs</p>
+                                    </div>
+                                </div>
+                                <div class="playlist-card" data-playlist="focus">
+                                    <div class="playlist-card-bg focus-bg"></div>
+                                    <div class="playlist-card-content">
+                                        <h3>Focus Mode</h3>
+                                        <p>15 songs</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Playlist View -->
+                        <div class="view-content" id="playlist-view">
+                            <div class="playlist-header">
+                                <button class="back-btn" id="back-to-playlists-btn">
+                                    <i class="fa-solid fa-arrow-left"></i>
+                                    Back
+                                </button>
+                                <h3 id="current-playlist-title">Current Playlist</h3>
+                                <div>
+                                    <button class="add-to-playlist-btn" id="add-to-playlist-btn">
+                                        <i class="fa-solid fa-plus"></i>
+                                        Add Music
+                                    </button>
+                                    <button class="shuffle-btn">
+                                        <i class="fa-solid fa-shuffle"></i>
+                                        Shuffle All
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <table class="playlist-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-num">#</th>
+                                        <th class="col-title">Title</th>
+                                        <th class="col-duration">
+                                            <i class="fa-solid fa-clock"></i>
+                                        </th>
+                                        <th class="col-actions"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="playlist-tracks">
+                                    <!-- Tracks will be added here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Favorites View -->
+                        <div class="view-content" id="favorites-view">
+                            <div class="playlist-header">
+                                <h3>Your Favorites</h3>
+                                <button class="shuffle-btn">
+                                    <i class="fa-solid fa-shuffle"></i>
+                                    Shuffle All
+                                </button>
+                            </div>
+                            
+                            <table class="playlist-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-num">#</th>
+                                        <th class="col-title">Title</th>
+                                        <th class="col-duration">
+                                            <i class="fa-solid fa-clock"></i>
+                                        </th>
+                                        <th class="col-actions"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="favorites-tracks">
+                                    <!-- Favorites will be added here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Recent View -->
+                        <div class="view-content" id="recent-view">
+                            <div class="playlist-header">
+                                <h3>Recently Played</h3>
+                                <button class="shuffle-btn">
+                                    <i class="fa-solid fa-shuffle"></i>
+                                    Shuffle All
+                                </button>
+                            </div>
+                            
+                            <table class="playlist-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-num">#</th>
+                                        <th class="col-title">Title</th>
+                                        <th class="col-duration">
+                                            <i class="fa-solid fa-clock"></i>
+                                        </th>
+                                        <th class="col-actions"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-tracks">
+                                    <!-- Recent tracks will be added here by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom control bar -->
+        <div class="control-bar">
+            <div class="progress-container">
+                <span id="current-time">0:00</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                    </div>
+                    <input type="range" min="0" max="100" value="0" class="progress-bar" id="progress-bar">
+                </div>
+                <span id="duration">3:57</span>
+            </div>
+
+            <div class="playback-controls">
+                <div class="volume-controls">
+                    <button class="control-btn" id="mute-btn">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </button>
+                    <div class="volume-slider-container">
+                        <div class="volume-slider-bg">
+                            <div class="volume-slider-fill" id="volume-slider-fill"></div>
+                        </div>
+                        <input type="range" min="0" max="100" value="80" class="volume-slider" id="volume-slider">
+                    </div>
+                </div>
+
+                <div class="main-controls">
+                    <button class="control-btn">
+                        <i class="fa-solid fa-shuffle"></i>
+                    </button>
+                    <button class="control-btn" id="prev-btn">
+                        <i class="fa-solid fa-backward-step"></i>
+                    </button>
+                    <button class="play-btn" id="play-btn">
+                        <i class="fa-solid fa-play"></i>
+                    </button>
+                    <button class="control-btn" id="next-btn">
+                        <i class="fa-solid fa-forward-step"></i>
+                    </button>
+                    <button class="control-btn">
+                        <i class="fa-solid fa-repeat"></i>
+                    </button>
+                </div>
+
+                <div class="view-controls">
+                    <button class="control-btn">
+                        <i class="fa-solid fa-music"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File upload input (hidden) -->
+    <input type="file" id="file-upload" accept="audio/*" multiple style="display: none;">
+    
+    <!-- Add to playlist modal -->
+    <div class="modal" id="add-to-playlist-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add to Playlist</h3>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="playlist-select">
+                    <div class="playlist-option" data-playlist="workout">
+                        <div class="playlist-icon">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <span>Workout Mix</span>
+                    </div>
+                    <div class="playlist-option" data-playlist="chill">
+                        <div class="playlist-icon">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <span>Chill Vibes</span>
+                    </div>
+                    <div class="playlist-option" data-playlist="party">
+                        <div class="playlist-icon">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <span>Party Time</span>
+                    </div>
+                    <div class="playlist-option" data-playlist="focus">
+                        <div class="playlist-icon">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <span>Focus Mode</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create playlist modal -->
+    <div class="modal" id="create-playlist-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Playlist</h3>
+                <button class="close-modal-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="playlist-name">Playlist Name</label>
+                    <input type="text" id="playlist-name" placeholder="Enter playlist name">
+                </div>
+                <button class="create-playlist-btn">Create Playlist</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio-player" src="/placeholder.svg"></audio>
+    <script src="home.js"></script>
+</body>
+</html>
