@@ -1022,7 +1022,7 @@ button {
   }
   
   .volume-controls {
-      display: none;
+      /* display: none; */
       order: 3;
       width: 100%;
       justify-content: center;
